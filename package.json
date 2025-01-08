@@ -1,0 +1,36 @@
+{
+  "name": "turbo",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev:web": "turbo dev --filter=web -- -p 4200",
+    "dev:docs": "turbo dev --filter=docs -- -p 6006",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "turbo": "^2.3.3",
+    "typescript": "5.5.4"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^3.10.0",
+    "@mui/icons-material": "^6.3.1",
+    "@mui/material": "^6.3.1",
+    "@mui/x-date-pickers": "^7.23.3",
+    "@mui/x-date-pickers-pro": "^7.23.3",
+    "@tanstack/react-query": "^5.62.16",
+    "axios": "^1.7.9",
+    "date-fns": "^4.1.0",
+    "json-server": "1.0.0-beta.3",
+    "lodash": "^4.17.21",
+    "react-hook-form": "^7.54.2",
+    "zod": "^3.24.1"
+  }
+}
