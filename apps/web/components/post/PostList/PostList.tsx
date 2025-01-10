@@ -10,12 +10,16 @@ import { useQueryClient } from "@tanstack/react-query";
 import { EditPost } from "../EditPost/EditPost";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { useSearch } from "../../context/SearchContext";
+
 interface dataProps {
   id: number;
   title: string;
   body: string;
 }
+
 export const GetPost = () => {
+  const { search } = useSearch();
   const queryClient = useQueryClient();
   const [pageNumber, setPageNumber] = React.useState<number>(0);
   const [open, setOpen] = React.useState(false);
@@ -31,7 +35,22 @@ export const GetPost = () => {
     setSelectedId(null);
   };
 
-  const { data } = useGetPost(pageNumber);
+  const { data } = useGetPost(search);
+
+  const filteredPosts = data?.filter((item: dataProps) => {
+    return (
+      item.title.toLowerCase().includes(search.toLowerCase()) ||
+      item.body.toLowerCase().includes(search.toLowerCase()) ||
+      item.id.includes(search)
+    );
+  });
+
+  // const postsPerPage = 4;
+  // const totalPages = Math.ceil((filteredPosts?.length || 0) / postsPerPage);
+  // const paginatedPosts = filteredPosts?.slice(
+  //   pageNumber * postsPerPage,
+  //   (pageNumber + 1) * postsPerPage
+  // );
 
   const { mutate } = useDeletePost({
     options: {
@@ -43,7 +62,7 @@ export const GetPost = () => {
 
   return (
     <>
-      {data?.map((item: dataProps) => {
+      {filteredPosts?.map((item: dataProps) => {
         const { id, title, body } = item;
 
         return (
@@ -99,7 +118,11 @@ export const GetPost = () => {
           </Card>
         );
       })}
-      <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} />
+      {/* <Pagination
+        pageNumber={pageNumber}
+        setPageNumber={setPageNumber}
+        totalPages={totalPages}
+      /> */}
       <EditPost open={open} handleClose={handleClose} postId={selectedId} />
     </>
   );

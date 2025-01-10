@@ -1,10 +1,8 @@
-import React from "react";
-import { Box } from "@mui/material";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "../common/TextField";
-import { Button } from "../common/Button";
 
 const postSchema = z.object({
   title: z.string().trim().min(1, { message: "Title is required" }),
@@ -17,71 +15,57 @@ const postSchema = z.object({
 
 export type PostSchema = z.infer<typeof postSchema>;
 
-interface PostFormProps {
-  initialValues: PostSchema;
-  onSubmit: (data: PostSchema) => void;
-  onCancel: () => void;
+export interface PostFormHandles {
+  submitForm: (onSubmit: (values: PostSchema) => void) => void;
+  resetForm: () => void;
 }
 
-export const PostForm: React.FC<PostFormProps> = ({
-  initialValues,
-  onSubmit,
-  onCancel,
-}) => {
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<PostSchema>({
-    resolver: zodResolver(postSchema),
-    defaultValues: initialValues,
-  });
+interface PostFormProps {
+  initialValues: PostSchema;
+}
 
-  React.useEffect(() => {
-    reset(initialValues);
-  }, [initialValues, reset]);
+export const PostForm = forwardRef<PostFormHandles, PostFormProps>(
+  (props, ref) => {
+    const {
+      control,
+      handleSubmit,
+      reset,
+      formState: { errors },
+    } = useForm<PostSchema>({
+      resolver: zodResolver(postSchema),
+      defaultValues: props.initialValues,
+    });
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <TextField
-        control={control}
-        label="Title"
-        name="title"
-        error={!!errors.title}
-        helperText={errors.title?.message}
-      />
+    useImperativeHandle(ref, () => ({
+      submitForm(onSubmit) {
+        handleSubmit((formValues) => {
+          onSubmit(formValues);
+        })();
+      },
 
-      <TextField
-        control={control}
-        label="Body"
-        name="body"
-        error={!!errors.body}
-        helperText={errors.body?.message}
-      />
+      resetForm: () => reset(),
+    }));
 
-      <Box
-        sx={{
-          marginTop: 2,
-          display: "flex",
-          justifyContent: "end",
-          gap: 2,
-        }}
-      >
-        <Button
-          type="submit"
-          variant="contained"
-          label="Save"
-          sx={{ width: "70px", textTransform: "capitalize",background:"black" }}
+    return (
+      <form>
+        <TextField
+          control={control}
+          label="Title"
+          name="title"
+          error={!!errors.title}
+          helperText={errors.title?.message}
         />
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={onCancel}
-          label="Cancel"
-          sx={{ width: "70px", textTransform: "capitalize" }}
+
+        <TextField
+          control={control}
+          label="Body"
+          name="body"
+          error={!!errors.body}
+          helperText={errors.body?.message}
         />
-      </Box>
-    </form>
-  );
-};
+      </form>
+    );
+  }
+);
+
+PostForm.displayName = "PostForm";

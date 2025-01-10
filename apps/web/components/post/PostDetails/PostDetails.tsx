@@ -2,16 +2,14 @@
 
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { useParams } from "next/navigation";
 import { useGetPostBasicDetails } from "./hooks/useGetPostBasicDetails";
-import { Button } from "@/components/common/Button";
 
 export const PostDetails = () => {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params.id ? Number(params.id) : null;
 
   const { data, isLoading, isError } = useGetPostBasicDetails(id);
   if (isLoading) {
@@ -32,12 +30,11 @@ export const PostDetails = () => {
       }}
       className="container"
     >
-      <Card
+      <Box
         sx={{
           minWidth: 275,
-          background: "#f3f3f3",
-          color: "white",
-          borderLeft: "1px solid #1976d2",
+          color: "black",
+          border: "1px solid gray",
         }}
       >
         <CardContent>
@@ -51,7 +48,7 @@ export const PostDetails = () => {
 
           <Typography variant="body2">{data.body}</Typography>
         </CardContent>
-      </Card>
+      </Box>
     </Box>
   );
 };

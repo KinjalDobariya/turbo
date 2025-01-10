@@ -1,8 +1,9 @@
-import React from "react";
+"use client";
+import React, { useRef } from "react";
 import { Box, Typography, Modal } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAddPost } from "./hooks/useAddPost";
-import { PostForm, PostSchema } from "../PostForm";
+import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
 import { Button } from "../../common/Button";
 
 const modalStyle = {
@@ -19,6 +20,7 @@ const modalStyle = {
 export const AddPost = () => {
   const queryClient = useQueryClient();
   const [open, setOpen] = React.useState(false);
+  const ChildRef = useRef<PostFormHandles>(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -27,13 +29,16 @@ export const AddPost = () => {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["posts"] });
+        ChildRef.current?.resetForm();
         handleClose();
       },
     },
   });
 
-  const handleSubmit = (data: PostSchema) => {
-    mutate(data);
+  const handleSubmit = () => {
+    ChildRef.current?.submitForm((formValues: PostSchema) => {
+      mutate(formValues);
+    });
   };
 
   return (
@@ -52,6 +57,7 @@ export const AddPost = () => {
           Create Post
         </Button>
       </Box>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -67,11 +73,37 @@ export const AddPost = () => {
           >
             Add a New Post
           </Typography>
-          <PostForm
-            initialValues={{ title: "", body: "" }}
-            onSubmit={handleSubmit}
-            onCancel={handleClose}
-          />
+
+          <PostForm ref={ChildRef} initialValues={{ title: "", body: "" }} />
+
+          <Box
+            sx={{
+              marginTop: 2,
+              display: "flex",
+              justifyContent: "end",
+              gap: 2,
+            }}
+          >
+            <Button
+              type="button"
+              variant="contained"
+              label="Save"
+              sx={{
+                width: "70px",
+                textTransform: "capitalize",
+                background: "black",
+              }}
+              onClick={handleSubmit}
+            />
+
+            <Button
+              variant="outlined"
+              color="error"
+              label="Cancel"
+              sx={{ width: "70px", textTransform: "capitalize" }}
+              onClick={handleClose}
+            />
+          </Box>
         </Box>
       </Modal>
     </>

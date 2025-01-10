@@ -6,8 +6,9 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEditPost } from "./hooks/useEditPost";
-import { PostForm, PostSchema } from "../PostForm";
+import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
 import { useGetPostById } from "./hooks/useGetPostById";
+import { Button } from "../../common/Button";
 
 const modalStyle = {
   position: "absolute",
@@ -30,7 +31,7 @@ export const EditPost = ({
   postId: number | null;
 }) => {
   const queryClient = useQueryClient();
-
+  const ChildRef = React.useRef<PostFormHandles>(null);
   const { mutate } = useEditPost({
     id: postId,
     options: {
@@ -43,12 +44,10 @@ export const EditPost = ({
 
   const { data, isLoading } = useGetPostById(postId);
 
-  const handleSubmit = (formData: PostSchema) => {
-    if (postId) {
-      mutate(formData);
-    } else {
-      console.error("Post ID is missing.");
-    }
+  const handleSubmit = () => {
+    ChildRef.current?.submitForm((formValues: PostSchema) => {
+      mutate(formValues);
+    });
   };
 
   return (
@@ -71,14 +70,43 @@ export const EditPost = ({
         {isLoading ? (
           <Typography>Loading...</Typography>
         ) : (
-          <PostForm
-            initialValues={{
-              title: data?.title || "",
-              body: data?.body || "",
-            }}
-            onSubmit={handleSubmit}
-            onCancel={handleClose}
-          />
+          <>
+            <PostForm
+              ref={ChildRef}
+              initialValues={{
+                title: data?.title || "",
+                body: data?.body || "",
+              }}
+            />
+            <Box
+              sx={{
+                marginTop: 2,
+                display: "flex",
+                justifyContent: "end",
+                gap: 2,
+              }}
+            >
+              <Button
+                type="button"
+                variant="contained"
+                label="Edit"
+                sx={{
+                  width: "70px",
+                  textTransform: "capitalize",
+                  background: "black",
+                }}
+                onClick={handleSubmit}
+              />
+
+              <Button
+                variant="outlined"
+                color="error"
+                label="Cancel"
+                sx={{ width: "70px", textTransform: "capitalize" }}
+                onClick={handleClose}
+              />
+            </Box>
+          </>
         )}
       </Box>
     </Modal>
