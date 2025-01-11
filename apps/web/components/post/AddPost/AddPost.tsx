@@ -1,6 +1,6 @@
 "use client";
-import React, { useRef } from "react";
-import { Box, Typography, Modal } from "@mui/material";
+import React, { useCallback, useRef, useState } from "react";
+import { Box, Typography, Modal, Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAddPost } from "./hooks/useAddPost";
 import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
@@ -19,11 +19,17 @@ const modalStyle = {
 
 export const AddPost = () => {
   const queryClient = useQueryClient();
-  const [open, setOpen] = React.useState(false);
+
+  const [open, setOpen] = useState(false);
   const ChildRef = useRef<PostFormHandles>(null);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, []);
 
   const { mutate } = useAddPost({
     options: {
@@ -34,13 +40,12 @@ export const AddPost = () => {
       },
     },
   });
-
-  const handleSubmit = () => {
+  
+  const handleSubmit = useCallback(() => {
     ChildRef.current?.submitForm((formValues: PostSchema) => {
       mutate(formValues);
     });
-  };
-
+  }, [mutate]);
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "end" }}>
@@ -64,7 +69,7 @@ export const AddPost = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={modalStyle}>
+        <Stack direction={"column"} gap={2} sx={modalStyle}>
           <Typography
             id="modal-modal-title"
             variant="h6"
@@ -76,14 +81,7 @@ export const AddPost = () => {
 
           <PostForm ref={ChildRef} initialValues={{ title: "", body: "" }} />
 
-          <Box
-            sx={{
-              marginTop: 2,
-              display: "flex",
-              justifyContent: "end",
-              gap: 2,
-            }}
-          >
+          <Stack direction={"row"} gap={2} sx={{ justifyContent: "end" }}>
             <Button
               type="button"
               variant="contained"
@@ -103,8 +101,8 @@ export const AddPost = () => {
               sx={{ width: "70px", textTransform: "capitalize" }}
               onClick={handleClose}
             />
-          </Box>
-        </Box>
+          </Stack>
+        </Stack>
       </Modal>
     </>
   );

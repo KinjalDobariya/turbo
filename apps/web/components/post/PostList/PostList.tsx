@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 import Link from "next/link";
 import { useGetPost } from "./hooks/useGetPost";
@@ -12,18 +12,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useSearch } from "../../context/SearchContext";
 
-interface dataProps {
+type dataProps = {
   id: number;
   title: string;
   body: string;
-}
+};
 
 export const GetPost = () => {
   const { search } = useSearch();
   const queryClient = useQueryClient();
-  const [pageNumber, setPageNumber] = React.useState<number>(0);
-  const [open, setOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<number | null>(null);
+  const [pageNumber, setPageNumber] = useState<number>(0);
+  const [open, setOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const handleOpen = (id: number) => {
     setSelectedId(id);

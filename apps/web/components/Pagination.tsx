@@ -2,11 +2,11 @@ import { Stack } from "@mui/material";
 import React from "react";
 import { Button } from "./common/Button";
 
-interface PaginationProps {
+type PaginationProps = {
   pageNumber: number;
   setPageNumber: (page: number) => void;
   totalPages: number;
-}
+};
 
 export const Pagination: React.FC<PaginationProps> = ({
   pageNumber,

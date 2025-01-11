@@ -5,7 +5,7 @@ import { api } from "../../../../utils/api";
 
 export const useGetPost = (search: string) => {
   const fetchAllPosts = async () => {
-    const response = await api.get('/posts?_limit=100'); // Get a larger set of posts or all posts (adjust limit as necessary)
+    const response = await api.get('/posts?_limit=100'); 
     return response.data;
   };
 

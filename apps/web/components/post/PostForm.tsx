@@ -15,14 +15,14 @@ const postSchema = z.object({
 
 export type PostSchema = z.infer<typeof postSchema>;
 
-export interface PostFormHandles {
+export type PostFormHandles = {
   submitForm: (onSubmit: (values: PostSchema) => void) => void;
   resetForm: () => void;
-}
+};
 
-interface PostFormProps {
+type PostFormProps = {
   initialValues: PostSchema;
-}
+};
 
 export const PostForm = forwardRef<PostFormHandles, PostFormProps>(
   (props, ref) => {

@@ -9,6 +9,7 @@ import { useEditPost } from "./hooks/useEditPost";
 import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
 import { useGetPostById } from "./hooks/useGetPostById";
 import { Button } from "../../common/Button";
+import { Stack } from "@mui/material";
 
 const modalStyle = {
   position: "absolute",
@@ -57,7 +58,7 @@ export const EditPost = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={modalStyle}>
+      <Stack direction={"column"} gap={2} sx={modalStyle}>
         <Typography
           id="modal-modal-title"
           variant="h6"
@@ -78,14 +79,8 @@ export const EditPost = ({
                 body: data?.body || "",
               }}
             />
-            <Box
-              sx={{
-                marginTop: 2,
-                display: "flex",
-                justifyContent: "end",
-                gap: 2,
-              }}
-            >
+            
+            <Stack direction={"row"} gap={2} sx={{ justifyContent: "end" }}>
               <Button
                 type="button"
                 variant="contained"
@@ -105,10 +100,10 @@ export const EditPost = ({
                 sx={{ width: "70px", textTransform: "capitalize" }}
                 onClick={handleClose}
               />
-            </Box>
+            </Stack>
           </>
         )}
-      </Box>
+      </Stack>
     </Modal>
   );
 };

@@ -7,7 +7,7 @@ import {
 } from "react-hook-form";
 import { TextField as MuiTextField } from "@mui/material";
 
-interface ControlProps<TFieldValues extends FieldValues> {
+type ControlProps<TFieldValues extends FieldValues> = {
   name: FieldPath<TFieldValues>;
   control: Control<TFieldValues>;
   label: string;

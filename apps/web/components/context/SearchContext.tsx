@@ -1,15 +1,15 @@
 // SearchContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
-interface SearchContextType {
+type SearchContextType = {
   search: string;
   setSearch: (value: string) => void;
-}
+};
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>("");
 
   return (
     <SearchContext.Provider value={{ search, setSearch }}>

@@ -2,9 +2,9 @@
 import { api } from "../../../../utils/api";
 import { useMutation } from "@tanstack/react-query";
 
-interface DeletePostParams {
+type DeletePostParams = {
   options?: Record<string, unknown>;
-}
+};
 export const useDeletePost = ({ options = {} }: DeletePostParams) => {
   return useMutation({
     mutationKey: ["delete"],

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import React from "react";
 import { AddPost } from "../../components/post/AddPost/AddPost";
 import { GetPost } from "../../components/post/PostList/PostList";
@@ -6,20 +6,19 @@ import { GetPost } from "../../components/post/PostList/PostList";
 const page = () => {
   return (
     <div>
-      <Box
+      <Stack
+        direction={"column"}
+        gap={2}
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
           padding: "50px 0",
         }}
         className="container"
       >
         <AddPost />
         <GetPost />
-      </Box>
+      </Stack>
     </div>
   );
-}
+};
 
-export default  page
+export default page;

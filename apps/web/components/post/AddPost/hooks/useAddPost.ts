@@ -2,10 +2,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../../../../utils/api";
 
-interface PostProps {
+type PostProps = {
   title: string;
   body: string;
 }
+
 export const useAddPost = ({ options = {} }) => {
   return useMutation({
     mutationKey: ["add"],

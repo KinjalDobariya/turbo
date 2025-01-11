@@ -2,15 +2,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../../../../utils/api";
 
-interface EditPostParams {
+type EditPostParams = {
   options?: Record<string, unknown>;
   id: string | number | null;
-}
+};
 
-interface PostProps {
+type PostProps = {
   title: string;
   body: string;
-}
+};
 export const useEditPost = ({ options = {}, id }: EditPostParams) => {
   return useMutation({
     mutationKey: ["edit"],

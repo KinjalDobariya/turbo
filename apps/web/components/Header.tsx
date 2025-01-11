@@ -22,6 +22,7 @@ const Header = () => {
       <AppBar position="static" sx={{ backgroundColor: "#000", color: "#fff" }}>
         <Toolbar>
           <Typography variant="h6">TanStack</Typography>
+
           <Box
             component="div"
             sx={{
@@ -37,6 +38,7 @@ const Header = () => {
               <Link href="/contact">Contact</Link>
             </Stack>
           </Box>
+
           <Paper
             sx={{
               display: "flex",
@@ -46,7 +48,7 @@ const Header = () => {
               background: "transparent",
               border: "1px solid white",
               color: "white",
-              borderRadius:"0"
+              borderRadius: "0",
             }}
           >
             <InputBase
@@ -57,6 +59,7 @@ const Header = () => {
               onChange={handleSearchChange}
             />
           </Paper>
+
           <Button color="inherit" variant="inherit" label="Login" />
         </Toolbar>
       </AppBar>
