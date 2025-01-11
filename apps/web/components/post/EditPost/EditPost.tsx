@@ -1,15 +1,14 @@
 "use client";
 
 import * as React from "react";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEditPost } from "./hooks/useEditPost";
 import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
 import { useGetPostById } from "./hooks/useGetPostById";
-import { Button } from "../../common/Button";
 import { Stack } from "@mui/material";
+import { Button } from "@repo/shared-components";
 
 const modalStyle = {
   position: "absolute",

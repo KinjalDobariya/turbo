@@ -6,8 +6,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { InputBase, Paper, Stack } from "@mui/material";
 import Link from "next/link";
-import { Button } from "./common/Button";
 import { useSearch } from "./context/SearchContext";
+import { Button } from "@repo/shared-components";
 
 const Header = () => {
   const { search, setSearch } = useSearch();

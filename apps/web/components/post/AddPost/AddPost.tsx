@@ -4,7 +4,7 @@ import { Box, Typography, Modal, Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAddPost } from "./hooks/useAddPost";
 import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
-import { Button } from "../../common/Button";
+import { Button } from "@repo/shared-components";
 
 const modalStyle = {
   position: "absolute",

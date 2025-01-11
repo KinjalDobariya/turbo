@@ -16,7 +16,7 @@ type ControlProps<TFieldValues extends FieldValues> = {
   helperText?: string;
 }
 
-export const TextField = <TFieldValues extends FieldValues>({
+export const TextField =  <TFieldValues extends FieldValues>({
   name,
   control,
   label,

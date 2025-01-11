@@ -2,7 +2,7 @@ import React, { forwardRef, useImperativeHandle } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TextField } from "../common/TextField";
+import {TextField} from "@repo/shared-components"
 
 const postSchema = z.object({
   title: z.string().trim().min(1, { message: "Title is required" }),
