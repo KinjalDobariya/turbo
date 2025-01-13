@@ -5,7 +5,7 @@ import Post from "./post/page";
 const Home = () => {
   return (
     <>
-      <Post />
+      {/* <Post /> */}
     </>
   );
 };

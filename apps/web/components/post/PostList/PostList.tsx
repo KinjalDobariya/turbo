@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 import Link from "next/link";
 import { useGetPost } from "./hooks/useGetPost";
-import { Pagination } from "../../Pagination";
+// import { Pagination } from "../../Pagination";
 import { useDeletePost } from "./hooks/useDeletePost";
 import { useQueryClient } from "@tanstack/react-query";
 import { EditPost } from "../EditPost/EditPost";
@@ -21,7 +21,7 @@ type dataProps = {
 export const GetPost = () => {
   const { search } = useSearch();
   const queryClient = useQueryClient();
-  const [pageNumber, setPageNumber] = useState<number>(0);
+  // const [pageNumber, setPageNumber] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
@@ -105,12 +105,14 @@ export const GetPost = () => {
                 </Typography>
               </CardContent>
             </Link>
+
             <CardActions
               sx={{ display: "flex", justifyContent: "end", padding: "16px" }}
             >
               <Box onClick={() => handleOpen(id)}>
                 <BorderColorIcon fontSize="small" />
               </Box>
+
               <Box onClick={() => mutate(id)}>
                 <DeleteIcon fontSize="small" />
               </Box>

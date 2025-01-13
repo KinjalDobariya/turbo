@@ -2,9 +2,19 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  AppBar,
+  Box,
+  Container,
+  CssBaseline,
+  Drawer,
+  Grid,
+  Toolbar,
+} from "@mui/material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { SearchProvider } from "../components/context/SearchContext";
+import Sidebar from "../components/Sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,11 +38,24 @@ const RootLayout = ({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryClientProvider client={queryClient}>
-          <SearchProvider>
-            <Header />
-            <main>{children}</main>
-          </SearchProvider>
-          <Footer />
+          <Box display="flex">
+            <Sidebar />
+            <Box
+              component="main"
+              sx={{
+                flexGrow: 1,
+                bgcolor: "background.default",
+              }}
+            >
+              <SearchProvider>
+                <Header />
+                <Container maxWidth="lg" sx={{ mt: 3 }}>
+                  {children}
+                </Container>
+              </SearchProvider>
+              <Footer />
+            </Box>
+          </Box>
         </QueryClientProvider>
       </body>
     </html>

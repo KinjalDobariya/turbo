@@ -19,26 +19,8 @@ const Header = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: "#000", color: "#fff" }}>
-        <Toolbar>
-          <Typography variant="h6">TanStack</Typography>
-
-          <Box
-            component="div"
-            sx={{
-              flexGrow: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Stack direction="row" gap={5}>
-              <Link href="/">Home</Link>
-              <Link href="/blog">Blog</Link>
-              <Link href="/contact">Contact</Link>
-            </Stack>
-          </Box>
-
+      <AppBar position="static" sx={{ backgroundColor: "#fff", color: "#000" , boxShadow:"0px 2px 4px -1px rgb(0 0 0 / 0%), 0px 4px 5px 0px rgb(0 0 0 / 0%), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)" }}>
+        <Toolbar sx={{display:"flex", justifyContent:"end"}}>
           <Paper
             sx={{
               display: "flex",
@@ -46,20 +28,20 @@ const Header = () => {
               width: 260,
               height: "35px",
               background: "transparent",
-              border: "1px solid white",
-              color: "white",
+              border: "1px solid gray",
+              color: "black",
               borderRadius: "0",
+              boxShadow:"inherit"
             }}
           >
             <InputBase
-              sx={{ ml: 1, flex: 1, color: "white" }}
+              sx={{ ml: 1, flex: 1, color: "black" }}
               placeholder="Search"
               inputProps={{ "aria-label": "search" }}
               value={search}
               onChange={handleSearchChange}
             />
           </Paper>
-
           <Button color="inherit" variant="inherit" label="Login" />
         </Toolbar>
       </AppBar>
