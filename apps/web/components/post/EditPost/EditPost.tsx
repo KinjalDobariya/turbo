@@ -2,24 +2,13 @@
 
 import * as React from "react";
 import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEditPost } from "./hooks/useEditPost";
 import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
 import { useGetPostById } from "./hooks/useGetPostById";
 import { Stack } from "@mui/material";
-import { Button } from "@repo/shared-components";
-
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
+import { Button, Dialog } from "@repo/shared-components";
+import { Get } from "../../../queryKeyFactory/queryKeyFactory";
 
 export const EditPost = ({
   open,
@@ -36,7 +25,7 @@ export const EditPost = ({
     id: postId,
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["posts"] });
+        queryClient.invalidateQueries({ queryKey: [Get] });
         handleClose();
       },
     },
@@ -51,58 +40,58 @@ export const EditPost = ({
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Stack direction={"column"} gap={2} sx={modalStyle}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ color: "black" }}
-        >
-          Edit Post
-        </Typography>
+    <>
+      <Dialog
+        open={open}
+        handleClose={handleClose}
+        title="Edit Post"
+        body={() => {
+          return (
+            <>
+              {isLoading ? (
+                <Typography>Loading...</Typography>
+              ) : (
+                <>
+                  <PostForm
+                    ref={ChildRef}
+                    initialValues={{
+                      title: data?.title || "",
+                      body: data?.body || "",
+                    }}
+                  />
 
-        {isLoading ? (
-          <Typography>Loading...</Typography>
-        ) : (
-          <>
-            <PostForm
-              ref={ChildRef}
-              initialValues={{
-                title: data?.title || "",
-                body: data?.body || "",
-              }}
-            />
-            
-            <Stack direction={"row"} gap={2} sx={{ justifyContent: "end" }}>
-              <Button
-                type="button"
-                variant="contained"
-                label="Edit"
-                sx={{
-                  width: "70px",
-                  textTransform: "capitalize",
-                  background: "black",
-                }}
-                onClick={handleSubmit}
-              />
+                  <Stack
+                    direction={"row"}
+                    gap={2}
+                    sx={{ justifyContent: "end" }}
+                    paddingTop={2}
+                  >
+                    <Button
+                      type="button"
+                      variant="contained"
+                      label="Edit"
+                      sx={{
+                        width: "70px",
+                        textTransform: "capitalize",
+                        background: "#3ba4e8",
+                      }}
+                      onClick={handleSubmit}
+                    />
 
-              <Button
-                variant="outlined"
-                color="error"
-                label="Cancel"
-                sx={{ width: "70px", textTransform: "capitalize" }}
-                onClick={handleClose}
-              />
-            </Stack>
-          </>
-        )}
-      </Stack>
-    </Modal>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      label="Cancel"
+                      sx={{ width: "70px", textTransform: "capitalize" }}
+                      onClick={handleClose}
+                    />
+                  </Stack>
+                </>
+              )}
+            </>
+          );
+        }}
+      />
+    </>
   );
 };

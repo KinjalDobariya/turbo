@@ -1,4 +1,5 @@
 "use client";
+import { Delete } from "../../../../queryKeyFactory/queryKeyFactory";
 import { api } from "../../../../utils/api";
 import { useMutation } from "@tanstack/react-query";
 
@@ -7,7 +8,7 @@ type DeletePostParams = {
 };
 export const useDeletePost = ({ options = {} }: DeletePostParams) => {
   return useMutation({
-    mutationKey: ["delete"],
+    mutationKey: [Delete],
     mutationFn: async (id: number) => {
       const data = await api.delete(`/posts/${id}`);
       return data;

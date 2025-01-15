@@ -1,6 +1,7 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../../../../utils/api";
+import { Edit } from "../../../../queryKeyFactory/queryKeyFactory";
 
 type EditPostParams = {
   options?: Record<string, unknown>;
@@ -13,7 +14,7 @@ type PostProps = {
 };
 export const useEditPost = ({ options = {}, id }: EditPostParams) => {
   return useMutation({
-    mutationKey: ["edit"],
+    mutationKey: [Edit],
     mutationFn: async (postData: PostProps) => {
       const data = await api.patch(`/posts/${id}`, postData);
       return data;

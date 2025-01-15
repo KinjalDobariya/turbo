@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAddPost } from "./hooks/useAddPost";
 import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
 import { Button, Dialog } from "@repo/shared-components";
+import { Get } from "../../../queryKeyFactory/queryKeyFactory";
 
 export const AddPost = () => {
   const queryClient = useQueryClient();
@@ -23,7 +24,7 @@ export const AddPost = () => {
   const { mutate } = useAddPost({
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["posts"] });
+        queryClient.invalidateQueries({ queryKey: [Get] });
         ChildRef.current?.resetForm();
         handleClose();
       },
@@ -42,7 +43,7 @@ export const AddPost = () => {
           label="Add Post"
           size="small"
           sx={{
-            background: "#000",
+            background: "#3ba4e8",
             textTransform: "capitalize",
             color: "white",
           }}
@@ -72,7 +73,7 @@ export const AddPost = () => {
                   sx={{
                     width: "70px",
                     textTransform: "capitalize",
-                    background: "black",
+                    background: "#3ba4e8",
                   }}
                   onClick={handleSubmit}
                 />

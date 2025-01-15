@@ -1,4 +1,5 @@
 "use client";
+import { Get } from "../../../../queryKeyFactory/queryKeyFactory";
 import { api } from "../../../../utils/api";
 import { useQuery } from "@tanstack/react-query";
 
@@ -9,7 +10,7 @@ export const useGetPostBasicDetails = (id: number | null | string) => {
   };
 
   return useQuery({
-    queryKey: ["posts", id],
+    queryKey: [Get, id],
     queryFn: fetchPost,
   });
 };

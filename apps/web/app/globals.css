@@ -4,7 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -25,13 +25,13 @@ a {
   text-decoration: none;
 }
 
-
 .container {
   width: 1140px;
   margin: auto;
 }
 
 p,
-button {
+button,
+.css-rizt0-MuiTypography-root {
   font-family: "Inter", serif !important;
 }

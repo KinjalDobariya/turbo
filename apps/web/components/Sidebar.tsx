@@ -23,15 +23,32 @@ export default function Sidebar() {
       anchor="left"
     >
       <div style={{ padding: "22px" }}>
-        <Image src={Logo} alt="" />
+        <Image src={Logo} alt="Logo" />
         <List>
-          <ListItem component={Link} href="/">
-            <ListItemText primary="Home" />
+          <ListItem
+            component={Link}
+            href="/"
+            sx={{
+              borderRadius:"4px",
+              "&:hover": {
+                backgroundColor: "#1e2a34",
+              },
+            }}
+          >
+            <ListItemText primary="Dashboard" />
           </ListItem>
-          <ListItem component={Link} href="/post">
+          <ListItem
+            component={Link}
+            href="/post"
+            sx={{
+              borderRadius:"4px",
+              "&:hover": {
+                backgroundColor: "#1e2a34",
+              },
+            }}
+          >
             <ListItemText primary="Posts" />
           </ListItem>
-          {/* Add more links as needed */}
         </List>
       </div>
     </Drawer>
