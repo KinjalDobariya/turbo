@@ -12,7 +12,6 @@ const page = () => {
         sx={{
           padding: "50px 0",
         }}
-        className="container"
       >
         <AddPost />
         <GetPost />

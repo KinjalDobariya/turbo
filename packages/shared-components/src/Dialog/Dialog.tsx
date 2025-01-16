@@ -1,18 +1,26 @@
-import { Dialog as MuiDialog } from "@mui/material";
+import { DialogActions, Dialog as MuiDialog } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface DialogProps {
-  title: string;
+  title?: string;
   open: boolean;
   handleClose: () => void;
-  body: () => JSX.Element;
-  showClose?: boolean;  // Optional prop to control the close button visibility
+  children: React.ReactNode;
+  showClose?: boolean;
+  actions?: any;
 }
 
-export const Dialog = ({ title, open, handleClose, body, showClose = true }: DialogProps) => {
+export const Dialog = ({
+  title,
+  open,
+  handleClose,
+  children,
+  showClose = true,
+  actions,
+}: DialogProps) => {
   return (
     <MuiDialog
       onClose={handleClose}
@@ -38,7 +46,8 @@ export const Dialog = ({ title, open, handleClose, body, showClose = true }: Dia
         </IconButton>
       )}
 
-      <DialogContent>{body()}</DialogContent>
+      <DialogContent>{children}</DialogContent>
+      {actions && <DialogActions>{actions}</DialogActions>}
     </MuiDialog>
   );
 };

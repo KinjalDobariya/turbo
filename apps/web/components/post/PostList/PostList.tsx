@@ -11,12 +11,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useSearch } from "../../context/SearchContext";
 import { Get } from "../../../queryKeyFactory/queryKeyFactory";
-import { Card } from "@repo/shared-components";   
+import { AgGrid, Card } from "@repo/shared-components";
 import { Box, Stack, Typography } from "@mui/material";
 import { AxiosResponse } from "axios";
 
 type dataProps = {
   id: number;
+  title: string;
+  body: string;
+};
+
+type filteredPostsProps = {
+  id: string;
   title: string;
   body: string;
 };
@@ -86,7 +92,7 @@ export const GetPost = () => {
 
   const { data } = useGetPost(search);
 
-  const filteredPosts = data?.filter((item: dataProps) => {
+  const filteredPosts = data?.filter((item: filteredPostsProps) => {
     return (
       item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.body.toLowerCase().includes(search.toLowerCase()) ||
@@ -109,31 +115,41 @@ export const GetPost = () => {
     },
   });
 
+  const rowData =
+    filteredPosts?.map((post: filteredPostsProps) => ({
+      id: post.id,
+      title: post.title,
+      body: post.body,
+    })) || [];
+
+  const columnDefs =
+    filteredPosts && filteredPosts.length > 0
+      ? Object.keys(filteredPosts[0]).map((key) => ({
+          headerName: key.charAt(0).toUpperCase() + key.slice(1),
+          field: key,
+          flex: 1,
+        }))
+      : [];
+
   return (
     <>
       {filteredPosts?.map((item: dataProps, index: number) => {
         return (
           <>
             <div key={index}>
-              <Card
-                cardBody={
-                  <PostData
-                    item={item}
-                    handleOpen={handleOpen}
-                    mutate={mutate}
-                  />
-                }
-              />
+              <Card>
+                <PostData item={item} handleOpen={handleOpen} mutate={mutate} />
+              </Card>
             </div>
           </>
         );
       })}
-      {/* <Pagination
-        pageNumber={pageNumber}
-        setPageNumber={setPageNumber}
-        totalPages={totalPages}
-      /> */}
-      <EditPost open={open} handleClose={handleClose} postId={selectedId} />
+      
+      {open && (
+        <EditPost open={open} handleClose={handleClose} postId={selectedId} />
+      )}
+
+      <AgGrid columnDefs={columnDefs} rowData={rowData} />
     </>
   );
 };

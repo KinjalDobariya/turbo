@@ -1,11 +1,15 @@
 "use client";
-import React, { useCallback, useRef, useState } from "react";
+import React, { RefObject, useCallback, useRef, useState } from "react";
 import { Box, Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAddPost } from "./hooks/useAddPost";
 import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
 import { Button, Dialog } from "@repo/shared-components";
 import { Get } from "../../../queryKeyFactory/queryKeyFactory";
+
+type AddFormProps = {
+  ChildRef: RefObject<PostFormHandles>;
+};
 
 export const AddPost = () => {
   const queryClient = useQueryClient();
@@ -57,39 +61,44 @@ export const AddPost = () => {
         open={open}
         handleClose={handleClose}
         title=" Add a New Post"
-        body={() => {
-          return (
-            <>
-              <PostForm
-                ref={ChildRef}
-                initialValues={{ title: "", body: "" }}
-              />
+        actions={
+          <Stack
+            direction={"row"}
+            gap={2}
+            justifyContent={"end"}
+          >
+            <Button
+              type="button"
+              variant="contained"
+              label="Save"
+              sx={{
+                width: "70px",
+                textTransform: "capitalize",
+                background: "#3ba4e8",
+              }}
+              onClick={handleSubmit}
+            />
 
-              <Stack direction={"row"} gap={2} paddingTop={2} justifyContent={"end"}>
-                <Button
-                  type="button"
-                  variant="contained"
-                  label="Save"
-                  sx={{
-                    width: "70px",
-                    textTransform: "capitalize",
-                    background: "#3ba4e8",
-                  }}
-                  onClick={handleSubmit}
-                />
+            <Button
+              variant="outlined"
+              color="error"
+              label="Cancel"
+              sx={{ width: "70px", textTransform: "capitalize" }}
+              onClick={handleClose}
+            />
+          </Stack>
+        } 
+      >
+        <AddForm ChildRef={ChildRef} />
+      </Dialog>
+    </>
+  );
+};
 
-                <Button
-                  variant="outlined"
-                  color="error"
-                  label="Cancel"
-                  sx={{ width: "70px", textTransform: "capitalize" }}
-                  onClick={handleClose}
-                />
-              </Stack>
-            </>
-          );
-        }}
-      />
+const AddForm = ({ ChildRef }: AddFormProps) => {
+  return (
+    <>
+      <PostForm ref={ChildRef} />
     </>
   );
 };

@@ -21,7 +21,7 @@ export type PostFormHandles = {
 };
 
 type PostFormProps = {
-  initialValues: PostSchema;
+  initialValues?: PostSchema;
 };
 
 export const PostForm = forwardRef<PostFormHandles, PostFormProps>(

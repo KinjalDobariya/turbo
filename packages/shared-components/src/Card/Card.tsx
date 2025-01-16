@@ -1,9 +1,10 @@
 import { CardContent, Card as MuiCard } from "@mui/material";
 
-type CardProps = {
-  cardBody: string;
-};
-export const Card = ({ cardBody }: CardProps) => {
+export const Card = ({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) => {
   return (
     <>
       <MuiCard
@@ -23,7 +24,7 @@ export const Card = ({ cardBody }: CardProps) => {
           },
         }}
       >
-        <CardContent>{cardBody}</CardContent>
+        <CardContent>{children}</CardContent>
       </MuiCard>
     </>
   );

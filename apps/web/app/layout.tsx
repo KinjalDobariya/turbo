@@ -2,15 +2,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  AppBar,
-  Box,
-  Container,
-  CssBaseline,
-  Drawer,
-  Grid,
-  Toolbar,
-} from "@mui/material";
+import { Box, Container } from "@mui/material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { SearchProvider } from "../components/context/SearchContext";

@@ -12,5 +12,6 @@ export const useGetPostById = (id: number | null) => {
   return useQuery({
     queryKey: [Get, id],
     queryFn: fetchPost,
+    enabled: !!id,
   });
 };
