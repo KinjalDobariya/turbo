@@ -4,9 +4,10 @@ import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Box, Container } from "@mui/material";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
+// import Footer from "../components/Footer";
 import { SearchProvider } from "../components/context/SearchContext";
 import Sidebar from "../components/Sidebar";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,24 +31,25 @@ const RootLayout = ({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryClientProvider client={queryClient}>
-          <Box display="flex">
-            <Sidebar />
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                bgcolor: "background.default",
-              }}
-            >
-              <SearchProvider>
+          <SearchProvider>
+            <Box display="flex">
+              <Sidebar />
+              <Box
+                component="main"
+                sx={{
+                  flexGrow: 1,
+                  bgcolor: "background.default",
+                }}
+              >
                 <Header />
                 <Container maxWidth="lg" sx={{ mt: 3 }}>
                   {children}
                 </Container>
-              </SearchProvider>
-              <Footer />
+                {/* <Footer /> */}
+              </Box>
             </Box>
-          </Box>
+          </SearchProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </body>
     </html>

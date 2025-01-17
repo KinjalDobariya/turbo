@@ -27,8 +27,11 @@ export const Dialog = ({
       aria-labelledby="customized-dialog-title"
       open={open}
     >
-      <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-        {title || "Modal Title"}
+      <DialogTitle
+        sx={{ minWidth: "450px", m: 0, p: 2,}}
+        id="customized-dialog-title"
+      >
+        {title}
       </DialogTitle>
 
       {showClose && (

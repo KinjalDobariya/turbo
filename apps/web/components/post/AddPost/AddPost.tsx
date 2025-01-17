@@ -1,19 +1,16 @@
 "use client";
 import React, { RefObject, useCallback, useRef, useState } from "react";
 import { Box, Stack } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAddPost } from "./hooks/useAddPost";
-import { PostForm, PostFormHandles, PostSchema } from "../PostForm";
+import { PostForm, PostFormHandles } from "../PostForm";
 import { Button, Dialog } from "@repo/shared-components";
-import { Get } from "../../../queryKeyFactory/queryKeyFactory";
+import { useGetPost } from "../PostList/hooks/useGetPost";
 
 type AddFormProps = {
   ChildRef: RefObject<PostFormHandles>;
 };
 
 export const AddPost = () => {
-  const queryClient = useQueryClient();
-
   const [open, setOpen] = useState(false);
   const ChildRef = useRef<PostFormHandles>(null);
 
@@ -25,10 +22,12 @@ export const AddPost = () => {
     setOpen(false);
   }, []);
 
+  const { refetch } = useGetPost("");
+
   const { mutate } = useAddPost({
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [Get] });
+        refetch();
         ChildRef.current?.resetForm();
         handleClose();
       },
@@ -36,7 +35,7 @@ export const AddPost = () => {
   });
 
   const handleSubmit = useCallback(() => {
-    ChildRef.current?.submitForm((formValues: PostSchema) => {
+    ChildRef.current?.submitForm((formValues) => {
       mutate(formValues);
     });
   }, [mutate]);
@@ -62,11 +61,7 @@ export const AddPost = () => {
         handleClose={handleClose}
         title=" Add a New Post"
         actions={
-          <Stack
-            direction={"row"}
-            gap={2}
-            justifyContent={"end"}
-          >
+          <Stack direction={"row"} gap={2} justifyContent={"end"}>
             <Button
               type="button"
               variant="contained"
@@ -87,7 +82,7 @@ export const AddPost = () => {
               onClick={handleClose}
             />
           </Stack>
-        } 
+        }
       >
         <AddForm ChildRef={ChildRef} />
       </Dialog>

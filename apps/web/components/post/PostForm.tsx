@@ -1,22 +1,24 @@
-import React, { forwardRef, useImperativeHandle } from "react";
-import { useForm } from "react-hook-form";
+import React, { ForwardedRef, forwardRef, useImperativeHandle } from "react";
+import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {TextField} from "@repo/shared-components"
+import { TextField } from "@repo/shared-components";
+import { pickBy } from "lodash";
 
 const postSchema = z.object({
-  title: z.string().trim().min(1, { message: "Title is required" }),
+  title: z.string().trim().min(1, { message: "Title is required" }).nullable(),
   body: z
     .string()
     .trim()
     .min(1, { message: "Body is required" })
-    .max(255, { message: "Body must be 255 characters or less" }),
+    .max(255, { message: "Body must be 255 characters or less" })
+    .nullable(),
 });
 
 export type PostSchema = z.infer<typeof postSchema>;
 
 export type PostFormHandles = {
-  submitForm: (onSubmit: (values: PostSchema) => void) => void;
+  submitForm: (onSubmit: (formValues: Partial<PostSchema>) => void) => void;
   resetForm: () => void;
 };
 
@@ -24,22 +26,45 @@ type PostFormProps = {
   initialValues?: PostSchema;
 };
 
+export const filterChangedFormFields = <T extends FieldValues>(
+  allFields: T,
+  dirtyFields: Partial<
+    Record<keyof T, boolean | boolean[] | Record<string, unknown>>
+  >
+): Partial<T> => {
+  const changedFieldValues = Object.keys(pickBy(dirtyFields)).reduce(
+    (acc, currentField) => {
+      return {
+        ...acc,
+        [currentField]: allFields[currentField],
+      };
+    },
+    {} as Partial<T>
+  );
+
+  return changedFieldValues;
+};
+
 export const PostForm = forwardRef<PostFormHandles, PostFormProps>(
-  (props, ref) => {
+  ({ initialValues }: PostFormProps, ref: ForwardedRef<PostFormHandles>) => {
     const {
       control,
       handleSubmit,
       reset,
-      formState: { errors },
+      formState: { errors, dirtyFields },
     } = useForm<PostSchema>({
       resolver: zodResolver(postSchema),
-      defaultValues: props.initialValues,
+      defaultValues: initialValues,
     });
 
     useImperativeHandle(ref, () => ({
       submitForm(onSubmit) {
         handleSubmit((formValues) => {
-          onSubmit(formValues);
+          const filterFormValues = filterChangedFormFields(
+            formValues,
+            dirtyFields
+          );
+          onSubmit(filterFormValues);
         })();
       },
 

@@ -1,19 +1,15 @@
-"use client";
-
+"use client"
 import React, { useState } from "react";
 import Link from "next/link";
 import { useGetPost } from "./hooks/useGetPost";
-// import { Pagination } from "../../Pagination";
-import { useDeletePost } from "./hooks/useDeletePost";
-import { UseMutateFunction, useQueryClient } from "@tanstack/react-query";
 import { EditPost } from "../EditPost/EditPost";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useSearch } from "../../context/SearchContext";
-import { Get } from "../../../queryKeyFactory/queryKeyFactory";
 import { AgGrid, Card } from "@repo/shared-components";
 import { Box, Stack, Typography } from "@mui/material";
-import { AxiosResponse } from "axios";
+import { DeletePost } from "../DeletePost/DeletePost";
+import { ColDef } from "ag-grid-community";
 
 type dataProps = {
   id: number;
@@ -27,67 +23,22 @@ type filteredPostsProps = {
   body: string;
 };
 
-type PostDataProps = {
-  item: dataProps;
-  handleOpen: (id: number) => void;
-  mutate: UseMutateFunction<AxiosResponse<any, any>, Error, number, unknown>;
-};
-
-const PostData = ({ item, handleOpen, mutate }: PostDataProps) => {
-  console.log("item", item);
-  const { id, title, body } = item;
-  return (
-    <>
-      <Stack direction={"row"} justifyContent={"space-between"}>
-        <Link href={`/post/${id}`} passHref>
-          <Box
-            sx={{
-              cursor: "pointer",
-            }}
-          >
-            <Typography gutterBottom sx={{ fontSize: 14, color: "black" }}>
-              No {id}
-            </Typography>
-
-            <Typography variant="h6" component="div">
-              {title}
-            </Typography>
-
-            <Typography variant="body2" sx={{ marginTop: 1 }}>
-              {body}
-            </Typography>
-          </Box>
-        </Link>
-
-        <Stack direction={"row"} gap={2}>
-          <Box onClick={() => handleOpen(id)}>
-            <BorderColorIcon fontSize="small" />
-          </Box>
-
-          <Box onClick={() => mutate(id)}>
-            <DeleteIcon fontSize="small" />
-          </Box>
-        </Stack>
-      </Stack>
-    </>
-  );
-};
-
 export const GetPost = () => {
   const { search } = useSearch();
-  const queryClient = useQueryClient();
-  // const [pageNumber, setPageNumber] = useState<number>(0);
-  const [open, setOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [open, setOpen] = useState<{
+    action: string | null;
+    postId: number | null;
+  }>({
+    action: null,
+    postId: null,
+  });
 
-  const handleOpen = (id: number) => {
-    setSelectedId(id);
-    setOpen(true);
+  const handleOpen = (action: string, id: number) => {
+    setOpen({ action, postId: id });
   };
 
   const handleClose = () => {
-    setOpen(false);
-    setSelectedId(null);
+    setOpen({ action: null, postId: null });
   };
 
   const { data } = useGetPost(search);
@@ -100,21 +51,6 @@ export const GetPost = () => {
     );
   });
 
-  // const postsPerPage = 4;
-  // const totalPages = Math.ceil((filteredPosts?.length || 0) / postsPerPage);
-  // const paginatedPosts = filteredPosts?.slice(
-  //   pageNumber * postsPerPage,
-  //   (pageNumber + 1) * postsPerPage
-  // );
-
-  const { mutate } = useDeletePost({
-    options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [Get] });
-      },
-    },
-  });
-
   const rowData =
     filteredPosts?.map((post: filteredPostsProps) => ({
       id: post.id,
@@ -122,7 +58,7 @@ export const GetPost = () => {
       body: post.body,
     })) || [];
 
-  const columnDefs =
+  const columnDefs: ColDef[] =
     filteredPosts && filteredPosts.length > 0
       ? Object.keys(filteredPosts[0]).map((key) => ({
           headerName: key.charAt(0).toUpperCase() + key.slice(1),
@@ -131,22 +67,81 @@ export const GetPost = () => {
         }))
       : [];
 
+  columnDefs.push({
+    headerName: "Actions",
+    field: "actions",
+    cellRenderer: (params: any) => {
+      const { id } = params.data;
+      return (
+        <Stack direction={"row"} gap={2}>
+          <Box onClick={() => handleOpen("edit", id)}>
+            <BorderColorIcon fontSize="small" sx={{ color: "blue" }} />
+          </Box>
+          <Box onClick={() => handleOpen("delete", id)}>
+            <DeleteIcon fontSize="small" sx={{ color: "red" }} />
+          </Box>
+        </Stack>
+      );
+    },
+    flex: 1,
+  });
+
   return (
     <>
       {filteredPosts?.map((item: dataProps, index: number) => {
+        const { id, title, body } = item;
         return (
-          <>
-            <div key={index}>
-              <Card>
-                <PostData item={item} handleOpen={handleOpen} mutate={mutate} />
-              </Card>
-            </div>
-          </>
+          <div key={index}>
+            <Card>
+              <Stack direction={"row"} justifyContent={"space-between"}>
+                <Link href={`/post/${id}`} passHref>
+                  <Box
+                    sx={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Typography
+                      gutterBottom
+                      sx={{ fontSize: 14, color: "black" }}
+                    >
+                      No {id}
+                    </Typography>
+
+                    <Typography variant="h6" component="div">
+                      {title}
+                    </Typography>
+
+                    <Typography variant="body2" sx={{ marginTop: 1 }}>
+                      {body}
+                    </Typography>
+                  </Box>
+                </Link>
+
+                <Stack direction={"row"} gap={2}>
+                  <Box onClick={() => handleOpen("edit", id)}>
+                    <BorderColorIcon fontSize="small" />
+                  </Box>
+
+                  <Box onClick={() => handleOpen("delete", id)}>
+                    <DeleteIcon fontSize="small" />
+                  </Box>
+                </Stack>
+              </Stack>
+            </Card>
+          </div>
         );
       })}
-      
-      {open && (
-        <EditPost open={open} handleClose={handleClose} postId={selectedId} />
+
+      {open.action === "edit" && open.postId !== null && (
+        <EditPost open={true} handleClose={handleClose} postId={open.postId} />
+      )}
+
+      {open.action === "delete" && open.postId !== null && (
+        <DeletePost
+          open={true}
+          handleClose={handleClose}
+          postId={open.postId}
+        />
       )}
 
       <AgGrid columnDefs={columnDefs} rowData={rowData} />

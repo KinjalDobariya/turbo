@@ -9,7 +9,7 @@ type DeletePostParams = {
 export const useDeletePost = ({ options = {} }: DeletePostParams) => {
   return useMutation({
     mutationKey: [Delete],
-    mutationFn: async (id: number) => {
+    mutationFn: async (id: number | null) => {
       const data = await api.delete(`/posts/${id}`);
       return data;
     },
