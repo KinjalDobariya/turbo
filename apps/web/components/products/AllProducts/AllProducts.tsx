@@ -1,44 +1,71 @@
 "use client";
 import { useSearch } from "../../context/SearchContext";
-import { Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { useGetProduct } from "./hooks/useGetPost";
 import Link from "next/link";
-import { CardBox } from "@repo/shared-components";
+import { Autocomplete, CardBox } from "@repo/shared-components";
+import { useGetCategories } from "../hooks/useGetCategories";
+import { useState } from "react";
 
-type dataProps = {
-  id: number;
+type Product = {
+  id: string;
   title: string;
   description: string;
   price: string;
+  category: { id: string; name: string }[];
 };
 
-type filteredPostsProps = {
+type Category = {
   id: string;
-  title: string;
-  body: string;
+  name: string;
 };
 
 export const AllProducts = () => {
   const { search } = useSearch();
-  const { data } = useGetProduct(search);
-  console.log("data", data);
+  const { data: products } = useGetProduct(search);
+  console.log("data", products);
 
-  const filteredPosts = data?.filter((item: filteredPostsProps) => {
-    return (
-      item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.body.toLowerCase().includes(search.toLowerCase()) ||
-      item.id.includes(search)
-    );
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  console.log("selectedCategories", selectedCategories);
+
+  const { data: categories } = useGetCategories();
+
+  if (!categories || !products) {
+    return null;
+  }
+
+  const filteredPosts = products.filter((item: Product) => {
+    const matchesCategory =
+      selectedCategories.length > 0
+        ? selectedCategories.every((cat) =>
+            item.category.find((productCat) => productCat.id === cat.id)
+          ) && item
+        : item;
+
+    return matchesCategory;
   });
+
+  console.log("filteredPosts", filteredPosts);
+  const handleCategoryChange = (event: any, newValue: Category[]) => {
+    setSelectedCategories(newValue);
+  };
 
   return (
     <>
+      <Box sx={{ display: "flex", justifyContent: "end", width: "100%" }}>
+        <Autocomplete
+          data={categories}
+          value={selectedCategories}
+          onChange={handleCategoryChange}
+        />
+      </Box>
       <Stack direction={"row"} gap={2} flexWrap={"wrap"}>
-        {filteredPosts?.map((item: dataProps) => {
+        {filteredPosts?.map((item: Product) => {
           const { id, title, description, price } = item;
           return (
             <div key={id}>
               <CardBox
+                sx={{ width: 275, height: "100%" }}
                 actions={
                   <>
                     <Button size="small">Share</Button>
@@ -48,14 +75,22 @@ export const AllProducts = () => {
                   </>
                 }
               >
-                <Typography gutterBottom variant="h5" component="div">
-                  {title}
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  component="div"
+                  sx={{ wordBreak: "break-all" }}
+                >
+                  {title?.slice(0, 20)}
                 </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {description.slice(0, 40)}
+                <Typography
+                  variant="body2"
+                  sx={{ color: "text.secondary", wordBreak: "break-all" }}
+                >
+                  {`${description?.slice(0, 40)}...`}
                 </Typography>
-                <Typography variant="h6" sx={{ color: "text.secondary" }}>
-                  {price}
+                <Typography sx={{ color: "text.secondary", marginTop: "10px" }}>
+                  {`$ ${price}`}
                 </Typography>
               </CardBox>
             </div>

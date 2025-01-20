@@ -8,6 +8,7 @@ import Header from "../components/Header";
 import { SearchProvider } from "../components/context/SearchContext";
 import Sidebar from "../components/Sidebar";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,31 +28,33 @@ const RootLayout = ({
   const queryClient = new QueryClient();
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <QueryClientProvider client={queryClient}>
-          <SearchProvider>
-            <Box display="flex">
-              <Sidebar />
-              <Box
-                component="main"
-                sx={{
-                  flexGrow: 1,
-                  bgcolor: "background.default",
-                }}
-              >
-                <Header />
-                <Container maxWidth="lg" sx={{ mt: 3 }}>
-                  {children}
-                </Container>
-                {/* <Footer /> */}
+      <SessionProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <QueryClientProvider client={queryClient}>
+            <SearchProvider>
+              <Box display="flex">
+                <Sidebar />
+                <Box
+                  component="main"
+                  sx={{
+                    flexGrow: 1,
+                    bgcolor: "background.default",
+                  }}
+                >
+                  <Header />
+                  <Container maxWidth="lg" sx={{ mt: 3 }}>
+                    {children}
+                  </Container>
+                  {/* <Footer /> */}
+                </Box>
               </Box>
-            </Box>
-          </SearchProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </body>
+            </SearchProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </body>
+      </SessionProvider>
     </html>
   );
 };

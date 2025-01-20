@@ -10,7 +10,7 @@ import { Stack } from "@mui/material";
 
 export const PostDetails = () => {
   const params = useParams();
-  const id = params.id ? Number(params.id) : null;
+  const id = params.id ? String(params.id) : null;
 
   const { data, isLoading, isError } = useGetPostBasicDetails(id);
 

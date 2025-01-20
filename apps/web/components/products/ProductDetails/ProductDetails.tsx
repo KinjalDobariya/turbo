@@ -10,8 +10,7 @@ import Link from "next/link";
 
 export const ProductDetails = () => {
   const params = useParams();
-  const id = params.id ? Number(params.id) : null;
-
+  const id = params.id ? String(params.id) : null;
   const { data, isLoading, isError } = useGetProductBasicDetails(id);
 
   if (isLoading) {
@@ -34,9 +33,14 @@ export const ProductDetails = () => {
       <CardBox
         actions={
           <>
-            <Link href={`/products/all-products`} passHref>
-              <Button size="small">Back</Button>
-            </Link>
+            <Stack direction={"row"}>
+              <Link href={`/products/all-products`} passHref>
+                <Button size="small">Back</Button>
+              </Link>
+              <Link href={`/products/add-products`} passHref>
+                <Button size="small">Edit</Button>
+              </Link>
+            </Stack>
           </>
         }
       >
@@ -44,10 +48,13 @@ export const ProductDetails = () => {
           {data.title}
         </Typography>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {data.title}
+          {data.description}
         </Typography>
-        <Typography variant="h6" sx={{ color: "text.secondary" }}>
-          {data.price}
+        <Typography
+          variant="h6"
+          sx={{ color: "text.secondary", marginTop: "10px" }}
+        >
+          {`$ ${data.price}`}
         </Typography>
       </CardBox>
     </Stack>

@@ -69,8 +69,8 @@ export const Menu = () => {
                   <List sx={{ paddingLeft: 2 }}>
                     {menuItem.submenu.map((subItem) => (
                       <ListItem key={subItem.label} disablePadding>
-                        <Link href={subItem.path}>
-                          <ListItemButton>
+                        <Link href={subItem.path} >
+                          <ListItemButton >
                             <ListItemText primary={subItem.label} />
                           </ListItemButton>
                         </Link>
